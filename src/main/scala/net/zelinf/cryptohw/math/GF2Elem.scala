@@ -1,10 +1,15 @@
 package net.zelinf.cryptohw.math
 
+import cats.Eq
+
 class GF2Elem private (val value: BigInt) {}
 
 object GF2Elem {
 
   def apply(value: BigInt): GF2Elem = new GF2Elem(value)
+
+  implicit val instanceEq: Eq[GF2Elem] =
+    (x: GF2Elem, y: GF2Elem) => x.value == y.value
 
   def newGF2ElemFieldInstance(rp: BigInt): Field[GF2Elem] =
     new Field[GF2Elem] {
@@ -16,6 +21,7 @@ object GF2Elem {
       override def empty: GF2Elem = GF2Elem(0)
       override def combine(x: GF2Elem, y: GF2Elem): GF2Elem =
         GF2Elem(mod(sum(x.value, y.value), rp))
+      override def eqv(x: GF2Elem, y: GF2Elem): Boolean = instanceEq.eqv(x, y)
     }
 
   private def mod(num: BigInt, den: BigInt): BigInt = {

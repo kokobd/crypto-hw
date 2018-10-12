@@ -1,8 +1,8 @@
 package net.zelinf.cryptohw.math
 
-import cats.Monoid
+import cats._
 
-trait Field[A] extends Monoid[A] {
+trait Field[A] extends Monoid[A] with Eq[A] {
 
   def one: A
 
