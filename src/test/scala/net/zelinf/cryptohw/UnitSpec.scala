@@ -1,5 +1,6 @@
 package net.zelinf.cryptohw
 
-import org.scalatest._
+import org.scalatest.FunSpec
+import org.scalatest.prop.PropertyChecks
 
-abstract class UnitSpec extends FunSpec
+abstract class UnitSpec extends FunSpec with PropertyChecks

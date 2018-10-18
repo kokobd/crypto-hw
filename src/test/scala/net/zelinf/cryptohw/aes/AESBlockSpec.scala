@@ -1,0 +1,18 @@
+package net.zelinf.cryptohw.aes
+import net.zelinf.cryptohw.UnitSpec
+
+class AESBlockSpec extends UnitSpec {
+
+  describe("encryptBlock") {
+    it("is an inversion of decryptBlock") {
+      val keyData = Array(-67, -71, -122, -38, -101, -5, -23, 121, -94, -73,
+        -63, 98, -29, 49, 33, 92).map(_.toByte)
+      val clearText = Array(37, -85, -38, -107, 37, -22, -24, 54, -125, -49, 64,
+        43, -121, 27, 96, -34).map(_.toByte)
+      val key = Key(keyData)
+      val decryptedText =
+        AESBlock.decryptBlock(key, AESBlock.encryptBlock(key, clearText))
+      assert(decryptedText.toList == clearText.toList)
+    }
+  }
+}
