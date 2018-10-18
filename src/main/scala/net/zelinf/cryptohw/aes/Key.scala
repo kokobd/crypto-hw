@@ -1,5 +1,5 @@
 package net.zelinf.cryptohw.aes
-import net.zelinf.cryptohw.math.Unsigned
+import net.zelinf.cryptohw.math.BitUtils
 
 final class Key private (private val data: Array[Int]) {
 
@@ -27,7 +27,7 @@ final class Key private (private val data: Array[Int]) {
   }
 
   def bytes: Array[Byte] =
-    data.flatMap(Unsigned.wordToUnsignedBytes)
+    data.flatMap(BitUtils.wordToUnsignedBytes)
 }
 
 object Key {
@@ -40,7 +40,7 @@ object Key {
     require(permittedKeyLength(keyData.length))
 
     val data: Array[Int] =
-      keyData.grouped(4).map(Unsigned.unsignedBytesToWord).toArray
+      keyData.grouped(4).map(BitUtils.unsignedBytesToWord).toArray
     new Key(data)
   }
 
@@ -55,8 +55,8 @@ object Key {
   }
 
   private def subWord(word: Int): Int =
-    Unsigned.unsignedBytesToWord(
-      Unsigned.wordToUnsignedBytes(word).map(SBox.subByte)
+    BitUtils.unsignedBytesToWord(
+      BitUtils.wordToUnsignedBytes(word).map(SBox.subByte)
     )
 
 }

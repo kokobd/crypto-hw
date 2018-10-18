@@ -9,7 +9,7 @@ object GF2Elem {
   def apply(value: BigInt): GF2Elem = new GF2Elem(value)
 
   def apply(unsignedByte: Byte): GF2Elem =
-    GF2Elem(BigInt(Unsigned.unsignedByteToWord(unsignedByte)))
+    GF2Elem(BigInt(BitUtils.unsignedByteToWord(unsignedByte)))
 
   implicit val instanceEq: Eq[GF2Elem] =
     (x: GF2Elem, y: GF2Elem) => x.value == y.value
@@ -29,7 +29,7 @@ object GF2Elem {
 
   private def mod(num: BigInt, den: BigInt): BigInt = {
     var num_ = num
-    while (num.bitLength >= den.bitLength) {
+    while (num_.bitLength >= den.bitLength) {
       num_ ^= (den << (num_.bitLength - den.bitLength))
     }
     num_

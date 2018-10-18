@@ -1,9 +1,9 @@
 package net.zelinf.cryptohw.math
 
 import net.zelinf.cryptohw.UnitSpec
-import Unsigned._
+import BitUtils._
 
-final class UnsignedSpec extends UnitSpec {
+final class BitUtilsSpec extends UnitSpec {
 
   describe("unsignedBytesToWord") {
     it("combines bytes") {
