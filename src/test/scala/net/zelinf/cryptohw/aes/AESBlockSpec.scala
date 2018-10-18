@@ -1,5 +1,7 @@
 package net.zelinf.cryptohw.aes
+
 import net.zelinf.cryptohw.UnitSpec
+import TestUtils._
 
 class AESBlockSpec extends UnitSpec {
 
@@ -13,6 +15,15 @@ class AESBlockSpec extends UnitSpec {
       val decryptedText =
         AESBlock.decryptBlock(key, AESBlock.encryptBlock(key, clearText))
       assert(decryptedText.toList == clearText.toList)
+    }
+
+    it("works for a known sample") {
+      val key = Key("Thats my Kung Fu".getBytes)
+      val plainText = "Two One Nine Two".getBytes
+      val expected = intsToBytes(0x29, 0xC3, 0x50, 0x5F, 0x57, 0x14, 0x20, 0xF6,
+        0x40, 0x22, 0x99, 0xB3, 0x1A, 0x02, 0xD7, 0x3A)
+      val actual = AESBlock.encryptBlock(key, plainText)
+      assert(actual.toList == expected.toList)
     }
   }
 }

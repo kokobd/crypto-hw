@@ -1,5 +1,6 @@
 package net.zelinf.cryptohw.aes
 
+import com.oracle.xmlns.internal.webservices.jaxws_databinding.SoapBindingUse
 import net.zelinf.cryptohw.math._
 import net.zelinf.cryptohw.math.FieldSyntax._
 
@@ -11,12 +12,12 @@ private[aes] final class State(bytes: Seq[Byte]) extends Cloneable {
   def data: Array[Byte] = _data.clone()
 
   def subBytes(): State = {
-    _data.map(SBox.subByte)
+    _data.map(SBox.subByte).copyToArray(_data)
     this
   }
 
   def invSubBytes(): State = {
-    _data.map(SBox.invSubByte)
+    _data.map(SBox.invSubByte).copyToArray(_data)
     this
   }
 
@@ -69,7 +70,14 @@ private[aes] final class State(bytes: Seq[Byte]) extends Cloneable {
   }
 
   def addRoundKey(roundKey: Key): State = {
-    roundKey.bytes.zip(_data).map { case (k, s) => k ^ s }
+    addAnother(roundKey.bytes)
+  }
+
+  def addAnother(that: Array[Byte]): State = {
+    _data
+      .zip(that)
+      .map { case (x, y) => BitUtils.bitwiseXor(x, y) }
+      .copyToArray(_data)
     this
   }
 
@@ -91,7 +99,7 @@ private[aes] final class State(bytes: Seq[Byte]) extends Cloneable {
   }
 }
 
-object State {
+private[aes] object State {
 
   private[aes] def mixColumn(column: Array[Byte]): Array[Byte] =
     mixColumnBase(column, Array(2, 1, 1, 3))

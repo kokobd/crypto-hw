@@ -24,6 +24,7 @@ private[aes] object SBox {
   }
 
   def invSubByte(byte: Byte): Byte = {
+    // TODO fix this method
     val z = mulInvertForInput(byte)
     val coef: Array[Byte] = Array(
       b"00100101",

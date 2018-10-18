@@ -12,9 +12,9 @@ final class Key private (private val data: Array[Int]) {
       expansion(i) = {
         if (i < n) {
           data(i)
-        } else if (i > n && i % n == 0) {
+        } else if (i >= n && i % n == 0) {
           expansion(i - n) ^
-            Key.rotWord(Key.subWord(expansion(i - 1))) ^
+            Key.subWord(Key.rotWord(expansion(i - 1))) ^
             Key.rcon(i / n)
         } else if (i >= n && n > 6 && i % n == 4) {
           expansion(i - n) ^ Key.subWord(expansion(i - 1))
@@ -28,6 +28,22 @@ final class Key private (private val data: Array[Int]) {
 
   def bytes: Array[Byte] =
     data.flatMap(BitUtils.wordToUnsignedBytes)
+
+  override def equals(other: Any): Boolean = other match {
+    case that: Key =>
+      rounds == that.rounds &&
+        (data sameElements that.data)
+    case _ => false
+  }
+
+  override def hashCode(): Int = {
+    val state = Seq(rounds, data)
+    state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
+  }
+
+  override def toString: String =
+    showUBytes(bytes)
+
 }
 
 object Key {
@@ -45,9 +61,8 @@ object Key {
   }
 
   private val rcon: Vector[Int] =
-    Vector(0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36).map(
-      x => x << 24
-    )
+    Vector(0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36)
+//      .map(x => x << 24)
 
   private[aes] def rotWord(word: Int): Int = {
     val b0 = word & 0xFF

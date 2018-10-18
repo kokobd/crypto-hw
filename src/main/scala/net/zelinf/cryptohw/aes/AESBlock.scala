@@ -10,10 +10,10 @@ private[aes] object AESBlock {
     state.addRoundKey(roundKeyIt.next())
     while (roundKeyIt.hasNext) {
       val roundKey = roundKeyIt.next()
-
       state.subBytes().shiftRows()
       if (roundKeyIt.hasNext)
         state.mixColumns()
+
       state.addRoundKey(roundKey)
     }
 
