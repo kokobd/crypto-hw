@@ -27,8 +27,6 @@ class AESSpec extends UnitSpec {
     str.getBytes ++ Array.fill(length - str.length)(0.toByte)
   }
 
-  private def demo(): Unit = {}
-
   private def javaEncryptCBC(iv: Array[Byte],
                              key: Array[Byte],
                              plainText: Array[Byte]): Array[Byte] = {

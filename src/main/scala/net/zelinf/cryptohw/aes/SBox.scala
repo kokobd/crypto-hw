@@ -24,26 +24,25 @@ private[aes] object SBox {
   }
 
   def invSubByte(byte: Byte): Byte = {
-    // TODO fix this method
-    val z = mulInvertForInput(byte)
     val coef: Array[Byte] = Array(
-      b"00100101",
-      b"10010010",
-      b"01001001",
       b"10100100",
-      b"01010010",
-      b"00101001",
+      b"01001001",
+      b"10010010",
+      b"00100101",
+      b"01001010",
       b"10010100",
-      b"01001010"
+      b"00101001",
+      b"01010010"
     )
     var result: Byte = 0
     for (i <- coef.indices) {
       result = bitwiseOr(
         result,
-        (booleanToInt(bitCount(bitwiseAnd(coef(i), z)) % 2 != 0) << i).toByte
+        (booleanToInt(bitCount(bitwiseAnd(coef(i), byte)) % 2 != 0) << i).toByte
       )
     }
-    result = bitwiseXor(result, b"10100000")
+    result = bitwiseXor(result, b"00000101")
+    result = mulInvertForInput(result)
     result
   }
 
